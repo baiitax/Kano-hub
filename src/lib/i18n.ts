@@ -29,6 +29,12 @@ export const dict = {
     agent: "Agent",
     cashAssist: "Cash assist",
     partnerNote: "Cash-in and cash-out are processed by participating licensed financial partners. KanoHub is not a bank.",
+    solutions: "Solutions",
+    partners: "Partners",
+    trust: "Trust",
+    merchants: "Merchants",
+    riders: "Riders",
+    pricing: "Pricing",
   },
   ha: {
     services: "Ayyuka",

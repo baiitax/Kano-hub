@@ -19,11 +19,12 @@ export default function Page() {
           <Card key={d.id} className="mb-3 p-4">
             <div className="flex justify-between">
               <p className="font-bold">{d.id}</p>
-              <span className="font-extrabold text-emerald-800">{naira(d.fee)}</span>
+              <Badge tone={d.status === "Delivered" ? "green" : "amber"}>{d.status}</Badge>
             </div>
             <p className="text-sm text-slate-600">
               {d.pickup} → {d.dropoff} · {d.distance}
             </p>
+            <p className="mt-1 font-extrabold text-emerald-800">{naira(d.fee)}</p>
             <p className="text-xs text-slate-500">
               {d.customer} · {d.orderId}
             </p>

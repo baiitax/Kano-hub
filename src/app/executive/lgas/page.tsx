@@ -11,6 +11,12 @@ export default function Page() {
     <ExecShell>
       <h1 className="text-2xl font-extrabold text-white">LGA penetration</h1>
       <p className="text-sm text-slate-400">Coverage across Kano metro — illustrative platform activity.</p>
+      <div className="mt-4 grid grid-cols-2 gap-3 lg:grid-cols-4">
+        <StatCard label="LGAs" value={String(lgaStats.length)} />
+        <StatCard label="Shops (proto)" value={lgaStats.reduce((s, l) => s + l.businesses, 0).toLocaleString()} />
+        <StatCard label="GMV index sum" value={String(lgaStats.reduce((s, l) => s + l.gmv, 0))} />
+        <StatCard label="Top LGA" value={lgaStats.slice().sort((a, b) => b.gmv - a.gmv)[0].lga} />
+      </div>
       <LiveMap
         className="mt-4 h-64"
         pickup={{ ...kanoPins.zoo, label: "Nassarawa" }}
