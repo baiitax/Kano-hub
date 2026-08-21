@@ -24,17 +24,30 @@ import {
   Building2,
   CreditCard,
   BookOpen,
+  Activity,
+  Radio,
+  Server,
+  KeyRound,
 } from "lucide-react";
 import { useState, type ReactNode } from "react";
+import { BankDock, LoansDock, SecurityDock } from "./docks";
 
 const bankNav = [
   { href: "/bank", label: "Bank overview", icon: LayoutDashboard },
+  { href: "/bank/activity", label: "Live tape", icon: Activity },
   { href: "/bank/accounts", label: "Merchant accounts", icon: Landmark },
   { href: "/bank/transactions", label: "Ledger", icon: BookOpen },
+  { href: "/bank/nip", label: "NIP / transfers", icon: CreditCard },
+  { href: "/bank/cards", label: "Card acquiring", icon: CreditCard },
   { href: "/bank/settlements", label: "Settlements", icon: Wallet },
+  { href: "/bank/exceptions", label: "Exceptions", icon: AlertTriangle },
+  { href: "/bank/kyc", label: "KYC / tiers", icon: Users },
+  { href: "/bank/treasury", label: "Treasury / nostro", icon: Landmark },
   { href: "/bank/lending", label: "Lending desk", icon: BadgeCheck },
+  { href: "/bank/collections", label: "Collections", icon: Wallet },
   { href: "/bank/risk", label: "Credit risk", icon: Shield },
-  { href: "/bank/compliance", label: "Compliance", icon: FileText },
+  { href: "/bank/compliance", label: "Compliance / AML", icon: FileText },
+  { href: "/bank/limits", label: "Limits", icon: Server },
   { href: "/bank/reports", label: "Reports", icon: BarChart3 },
 ];
 
@@ -49,13 +62,20 @@ const loanNav = [
 
 const socNav = [
   { href: "/security", label: "SOC command", icon: Siren },
+  { href: "/security/activity", label: "Live tape", icon: Activity },
   { href: "/security/alerts", label: "Alert queue", icon: AlertTriangle },
+  { href: "/security/cases", label: "Cases", icon: Eye },
   { href: "/security/identities", label: "Identities", icon: Users },
   { href: "/security/devices", label: "Devices", icon: Smartphone },
+  { href: "/security/sessions", label: "Sessions", icon: Radio },
   { href: "/security/fraud", label: "Fraud lab", icon: Eye },
+  { href: "/security/payments", label: "Payment intel", icon: Wallet },
   { href: "/security/watchlist", label: "Watchlist", icon: Shield },
+  { href: "/security/access", label: "Access / IAM", icon: KeyRound },
+  { href: "/security/health", label: "Service health", icon: Server },
   { href: "/security/audit", label: "Audit log", icon: ScrollText },
   { href: "/security/playbooks", label: "Playbooks", icon: FileText },
+  { href: "/security/reports", label: "SOC reports", icon: BarChart3 },
 ];
 
 export function PortalShell({
@@ -121,8 +141,11 @@ export function PortalShell({
             Admin
           </Link>
         </div>
-        <main className="flex-1 p-3 sm:p-6">{children}</main>
+        <main className="flex-1 p-3 pb-24 sm:p-6 lg:pb-6">{children}</main>
       </div>
+      {kind === "bank" && <BankDock />}
+      {kind === "loans" && <LoansDock />}
+      {kind === "security" && <SecurityDock />}
     </div>
   );
 }

@@ -1,6 +1,8 @@
 "use client";
 import { AppShell } from "@/components/chrome";
-import { PageHead, ProtoNote, StatCard } from "@/components/ui";
+import { Card, PageHead, ProtoNote, StatCard } from "@/components/ui";
+import { monthly } from "@/data/executive";
+import { Line, LineChart, ResponsiveContainer, Tooltip, XAxis } from "recharts";
 
 export default function Page() {
   return (
@@ -15,6 +17,16 @@ export default function Page() {
         <StatCard label="LTV (illustrative)" value="₦86,000" />
         <StatCard label="Activation" value="71%" />
       </div>
+      <Card className="mt-4 h-56 p-4">
+        <p className="text-sm font-semibold">GMV ₦bn</p>
+        <ResponsiveContainer width="100%" height="85%">
+          <LineChart data={monthly}>
+            <XAxis dataKey="m" />
+            <Tooltip />
+            <Line dataKey="gmv" stroke="#047857" />
+          </LineChart>
+        </ResponsiveContainer>
+      </Card>
     </AppShell>
   );
 }

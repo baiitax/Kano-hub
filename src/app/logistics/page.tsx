@@ -8,7 +8,8 @@ import { deliveries, naira } from "@/data/mock";
 import { riders } from "@/data/logistics";
 import { useStore } from "@/lib/store";
 import { useState } from "react";
-import { Bike, Building2, Phone, Wallet } from "lucide-react";
+import { Phone } from "lucide-react";
+import { RiderDock } from "@/components/docks";
 
 export default function Page() {
   const { toast, updateOrder } = useStore();
@@ -96,7 +97,9 @@ export default function Page() {
           </div>
         </Card>
 
-        <p className="text-sm font-semibold">Nearby jobs</p>
+        <p className="text-sm font-semibold">
+          Nearby jobs · <Link href="/logistics/jobs" className="text-emerald-800">full queue</Link>
+        </p>
         {deliveries.map((d) => (
           <Link key={d.id} href="/logistics">
             <Card className="mb-2 p-3 text-sm">
@@ -111,29 +114,7 @@ export default function Page() {
           </Link>
         ))}
       </div>
-      <LogisticsDock />
-    </div>
-  );
-}
-
-export function LogisticsDock() {
-  return (
-    <div className="pointer-events-none fixed inset-x-0 bottom-0 z-30 p-3 lg:hidden">
-      <nav className="pointer-events-auto mx-auto flex max-w-md items-center justify-around rounded-[1.85rem] border border-white/70 bg-white/85 px-2 py-2 shadow-[0_16px_40px_rgba(15,23,42,0.2)] backdrop-blur-xl">
-        {[
-          ["/logistics", Bike, "Jobs"],
-          ["/logistics/company", Building2, "Company"],
-          ["/merchant/logistics", Wallet, "Merchant"],
-          ["/customer/orders", Phone, "Customer"],
-        ].map(([h, Icon, l]) => (
-          <Link key={h as string} href={h as string} className="flex min-w-[4.2rem] flex-col items-center gap-0.5 py-1 text-[10px] font-semibold text-slate-600">
-            <span className="grid h-9 w-9 place-items-center rounded-2xl bg-emerald-700/10 text-emerald-800">
-              <Icon className="h-4 w-4" />
-            </span>
-            {l as string}
-          </Link>
-        ))}
-      </nav>
+      <RiderDock />
     </div>
   );
 }

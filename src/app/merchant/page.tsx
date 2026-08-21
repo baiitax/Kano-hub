@@ -7,6 +7,7 @@ import { CartesianGrid, Legend, Line, LineChart, ResponsiveContainer, Tooltip, X
 import { useState } from "react";
 import Link from "next/link";
 import { Plus, Receipt, Truck, Wallet } from "lucide-react";
+import { shopTape } from "@/data/merchant-ops";
 
 export default function MerchantHome() {
   const [range, setRange] = useState("30 Days");

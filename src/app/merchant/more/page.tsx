@@ -3,6 +3,7 @@ import { AppShell } from "@/components/chrome";
 import Link from "next/link";
 import { Card } from "@/components/ui";
 import {
+  Package,
   Boxes,
   Users,
   Building2,
@@ -20,11 +21,22 @@ import {
 } from "lucide-react";
 
 const links = [
+  ["/merchant/activity", "Live activity", BarChart3],
+  ["/merchant/returns", "Returns", Package],
+  ["/merchant/reviews", "Reviews", BadgeCheck],
+  ["/merchant/loyalty", "Loyalty", Megaphone],
+  ["/merchant/reports", "Reports", BarChart3],
+  ["/merchant/tax", "Tax summary", Landmark],
   ["/merchant/inventory", "Inventory", Boxes],
   ["/merchant/customers", "Customers", Users],
   ["/merchant/suppliers", "Suppliers", Building2],
+  ["/merchant/wholesale", "Wholesale POs", Boxes],
+  ["/wholesale", "B2B mill floor", Store],
   ["/merchant/accounting", "Accounting", Landmark],
   ["/merchant/wallet", "Wallet", Wallet],
+  ["/merchant/settlement", "Settlement", Landmark],
+  ["/merchant/credit-pack", "Credit pack", BadgeCheck],
+  ["/merchant/disputes", "Disputes", Package],
   ["/merchant/logistics", "Logistics", Truck],
   ["/merchant/analytics", "Analytics", BarChart3],
   ["/merchant/financial-profile", "Financial profile", BadgeCheck],

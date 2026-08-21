@@ -36,7 +36,9 @@ export default function Orders() {
                   <p className="font-semibold">{o.id}</p>
                   <Badge tone={o.status === "Delivered" ? "green" : "amber"}>{o.status}</Badge>
                 </div>
-                <p className="mt-1 text-sm text-slate-600">{o.merchant}</p>
+                <p className="mt-1 text-sm text-slate-600">
+                    {o.merchant} · {o.items.map((i) => i.name).join(", ")}
+                  </p>
                 <p className="mt-2 text-lg font-bold tabular-nums">{naira(o.amount)}</p>
                 <p className="text-xs text-slate-500">{o.date} · {o.delivery}</p>
               </Card>

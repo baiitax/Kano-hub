@@ -49,7 +49,14 @@ const services: {
   { icon: Receipt, title: "Point of Sale", desc: "Counter sales with cash, transfer, card or wallet.", href: "/merchant/pos", audience: "Merchants" },
   { icon: ShoppingBag, title: "Orders & Fulfilment", desc: "Accept, process, refund and assign riders.", href: "/merchant/orders", audience: "Merchants" },
   { icon: Users, title: "Customer CRM", desc: "Repeat buyers, VIP tags and money owed.", href: "/merchant/customers", audience: "Merchants" },
-  { icon: Building2, title: "Suppliers & Wholesale", desc: "Find distributors, request quotes, restock.", href: "/suppliers", audience: "B2B" },
+  { icon: Building2, title: "Suppliers & Wholesale", desc: "Mills, bales, MOQ restock and trade-credit requests.", href: "/wholesale", audience: "B2B" },
+  { icon: Factory, title: "Supplier OS", desc: "Mill command: POs, stock, slots, invoices.", href: "/supplier", audience: "Mills" },
+  { icon: MapPin, title: "Market clusters", desc: "Kantin Kwari, Sabon Gari, Dawanau stall maps.", href: "/markets", audience: "Kano" },
+  { icon: Users, title: "Agent + cash assist", desc: "Onboard rumfa, partner cash-in/out, USSD.", href: "/agent", audience: "Agents" },
+  { icon: ShoppingBag, title: "Split cart & holds", desc: "Multi-shop checkout, tracking, dispute hold.", href: "/cart", audience: "Trust" },
+  { icon: Landmark, title: "Settlement & credit pack", desc: "T+1 calendar + 90-day pack for partner RMs.", href: "/merchant/credit-pack", audience: "Banks" },
+  { icon: Building2, title: "Association chapter", desc: "Kwari members, dues, mill pools.", href: "/association", audience: "Clusters" },
+  { icon: MapPin, title: "Gov / MDA desk", desc: "View-only LGA GMV for state and donors.", href: "/gov", audience: "Government" },
   { icon: CreditCard, title: "Expenses", desc: "Rent, salary, transport — with receipts.", href: "/merchant/expenses", audience: "Merchants" },
   { icon: BookOpen, title: "Accounting", desc: "P&L, cash flow, tax summary. Export PDF/CSV.", href: "/merchant/accounting", audience: "Merchants" },
   { icon: Receipt, title: "Invoices", desc: "Create, send and record payments.", href: "/merchant/invoices", audience: "Merchants" },
@@ -288,6 +295,64 @@ export default function Landing() {
                 <p className="font-bold">{v as string}</p>
               </div>
             </Card>
+          ))}
+        </div>
+      </section>
+
+      <section className="mx-auto max-w-7xl px-4 py-8">
+        <h2 className="text-2xl font-bold">Built for every side of the stall</h2>
+        <div className="mt-4 grid gap-4 md:grid-cols-2 lg:grid-cols-4">
+          {[
+            ["/for-merchants", "Merchants", "POS, stock, books, riders, credit-readiness."],
+            ["/for-customers", "Customers", "Marketplace, wallet, live tracking, VIP points."],
+            ["/for-riders", "Riders & fleets", "Jobs, map, SLA, payouts, incidents."],
+            ["/for-agents", "Agents", "Kwari rumfa, cash-assist, USSD, Hausa."],
+            ["/for-partners", "Banks & government", "NIP desk, loan point, LGA GMV, SOC."],
+          ].map(([h, t, b]) => (
+            <Link key={h} href={h}>
+              <Card className="h-full p-5 hover:-translate-y-0.5">
+                <p className="font-bold">{t}</p>
+                <p className="mt-1 text-sm text-slate-600">{b}</p>
+                <p className="mt-3 text-xs font-semibold text-emerald-800">Learn more →</p>
+              </Card>
+            </Link>
+          ))}
+        </div>
+      </section>
+
+      <section className="mx-auto max-w-7xl px-4 py-8">
+        <h2 className="text-2xl font-bold">What operators said (illustrative)</h2>
+        <div className="mt-4 grid gap-4 md:grid-cols-3">
+          {[
+            ["Aisha Abdullahi", "Fashion · Nassarawa", "POS and online stock finally match. Weekend sales show on Friday’s tape."],
+            ["Maryam Yusuf", "Customer · Tarauni", "Paid from wallet, watched Abdullahi on the map to Hotoro."],
+            ["Halima Usman", "Ops", "KYC queue, payout holds and SOC ATO in one console."],
+          ].map(([n, r, q]) => (
+            <Card key={n} className="p-5">
+              <p className="text-sm text-slate-700">“{q}”</p>
+              <p className="mt-3 font-semibold">{n}</p>
+              <p className="text-xs text-slate-500">{r}</p>
+            </Card>
+          ))}
+        </div>
+      </section>
+
+      <section className="mx-auto max-w-7xl px-4 py-8">
+        <h2 className="text-2xl font-bold">System detail</h2>
+        <div className="mt-4 flex flex-wrap gap-2">
+          {[
+            ["/about", "About"],
+            ["/how-it-works", "How it works"],
+            ["/pricing", "Pricing"],
+            ["/trust", "Trust & safety"],
+            ["/faq", "FAQ"],
+            ["/contact", "Contact"],
+            ["/press", "Press"],
+            ["/legal/privacy", "Privacy"],
+          ].map(([h, l]) => (
+            <Button key={h} href={h} variant="outline" size="sm">
+              {l}
+            </Button>
           ))}
         </div>
       </section>

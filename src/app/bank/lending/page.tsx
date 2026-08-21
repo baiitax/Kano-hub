@@ -1,6 +1,6 @@
 "use client";
 import { PortalShell } from "@/components/portals";
-import { Badge, Button, Card, PageHead } from "@/components/ui";
+import { Badge, Button, Card, PageHead, StatCard } from "@/components/ui";
 import { loanPipeline } from "@/data/intel";
 import { naira } from "@/data/mock";
 import { useStore } from "@/lib/store";
@@ -10,6 +10,11 @@ export default function Page() {
   return (
     <PortalShell kind="bank">
       <PageHead title="Lending desk" sub="Decisions remain with the licensed partner" />
+      <div className="mb-4 grid gap-3 sm:grid-cols-3">
+        <StatCard label="In committee" value="3" />
+        <StatCard label="Approved awaiting funds" value="1" />
+        <StatCard label="Avg score" value="714" />
+      </div>
       <Card className="overflow-auto">
         <table className="w-full text-sm">
           <thead className="text-left text-xs">
@@ -33,7 +38,10 @@ export default function Page() {
                   <Badge>{l.status}</Badge>
                 </td>
                 <td>
-                  <Button size="sm" variant="outline" onClick={() => toast("Sent to credit committee", l.id)}>
+                  <Button size="sm" variant="outline" href="/merchant/financial-profile">
+                    Profile
+                  </Button>
+                  <Button size="sm" className="ml-1" onClick={() => toast("Sent to credit committee", l.id)}>
                     Review
                   </Button>
                 </td>

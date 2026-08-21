@@ -1,4 +1,23 @@
-export type Role = "customer" | "merchant" | "rider" | "supplier" | "admin" | "executive";
+export type Role =
+  | "customer"
+  | "merchant"
+  | "rider"
+  | "supplier"
+  | "admin"
+  | "executive"
+  | "bank"
+  | "loans"
+  | "security"
+  | "agent"
+  | "association"
+  | "gov";
+
+export type Session = {
+  role: Role;
+  name: string;
+  phone: string;
+  title: string;
+};
 
 export type Status =
   | "pending"
@@ -71,6 +90,9 @@ export interface Order {
   date: string;
   delivery: string;
   address: string;
+  parentId?: string;
+  hold?: number;
+  dispute?: string;
 }
 
 export interface Customer {

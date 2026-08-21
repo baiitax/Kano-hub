@@ -1,6 +1,6 @@
 "use client";
 
-import { AppShell } from "@/components/chrome";
+import { AppShell, ProductThumb } from "@/components/chrome";
 import { Badge, Button, Card, PageHead } from "@/components/ui";
 import { naira } from "@/data/mock";
 import { useStore } from "@/lib/store";

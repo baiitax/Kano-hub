@@ -5,20 +5,22 @@ import { CustomerBottom, Footer, PublicHeader } from "@/components/chrome";
 import { ProductCard, ShopChip } from "@/components/commerce";
 import { businesses, categories, products } from "@/data/mock";
 import { Sparkles } from "lucide-react";
+import { useT } from "@/lib/i18n";
 
 export default function Marketplace() {
+  const t = useT();
   return (
     <div className="min-h-screen pb-24 md:pb-0">
       <PublicHeader />
       <div className="mx-auto max-w-7xl px-3 py-4 sm:px-4 sm:py-8">
         <div className="flex flex-wrap items-end justify-between gap-2">
           <div>
-            <p className="text-xs font-semibold uppercase tracking-wide text-emerald-800">Kano State</p>
-            <h1 className="text-2xl font-extrabold tracking-tight sm:text-3xl">Marketplace</h1>
-            <p className="text-sm text-slate-600">Verified shops. Same-day delivery in metro LGAs.</p>
+            <p className="text-xs font-semibold uppercase tracking-wide text-emerald-800">{t("kanoState")}</p>
+            <h1 className="text-2xl font-extrabold tracking-tight sm:text-3xl">{t("marketplace")}</h1>
+            <p className="text-sm text-slate-600">{t("marketSub")}</p>
           </div>
           <Link href="/marketplace/search?q=sneakers" className="text-sm font-semibold text-emerald-800">
-            Advanced search
+            {t("advSearch")}
           </Link>
         </div>
 
@@ -37,7 +39,7 @@ export default function Marketplace() {
         <section className="mt-8">
           <div className="mb-3 flex items-center gap-2">
             <Sparkles className="h-4 w-4 text-amber-600" />
-            <h2 className="text-lg font-bold">Featured businesses</h2>
+            <h2 className="text-lg font-bold">{t("featured")}</h2>
           </div>
           <div className="flex gap-3 overflow-x-auto pb-2 scrollbar-thin lg:grid lg:grid-cols-3 lg:overflow-visible">
             {businesses.map((b) => (
@@ -56,7 +58,7 @@ export default function Marketplace() {
         </section>
 
         <section className="mt-10">
-          <h2 className="text-lg font-bold">Popular near you</h2>
+          <h2 className="text-lg font-bold">{t("popular")}</h2>
           <div className="mt-3 grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5">
             {products.map((p) => (
               <ProductCard key={p.id} p={p} />

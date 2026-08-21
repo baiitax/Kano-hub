@@ -38,6 +38,10 @@ import {
 } from "lucide-react";
 import { useState, type FormEvent, type ReactNode } from "react";
 import type { Role } from "@/types";
+import { AdminDock, MerchantDock, RiderDock, SupplierDock } from "./docks";
+import { LangToggle } from "./lang-toggle";
+import { useT } from "@/lib/i18n";
+export { CustomerDock as CustomerBottom } from "./docks";
 
 export function Logo({ light }: { light?: boolean }) {
   return (
@@ -53,11 +57,11 @@ export function Logo({ light }: { light?: boolean }) {
 }
 
 export function DemoSwitcher() {
-  const { role, setRole, lang, setLang } = useStore();
+  const { role, loginAs } = useStore();
   const router = useRouter();
   const [open, setOpen] = useState(false);
   const go = (r: Role, path: string) => {
-    setRole(r);
+    loginAs(r);
     setOpen(false);
     router.push(path);
   };
@@ -85,9 +89,12 @@ export function DemoSwitcher() {
                   ["supplier", "Supplier — Kano Textile Mills", "/supplier"],
                   ["admin", "Platform Admin", "/admin"],
                   ["executive", "Executive / Investor", "/executive"],
-                  ["admin", "Bank desk", "/bank"],
-                  ["admin", "Loan point", "/loans"],
-                  ["admin", "Security SOC", "/security"],
+                  ["bank", "Bank desk", "/bank"],
+                  ["loans", "Loan point", "/loans"],
+                  ["security", "Security SOC", "/security"],
+                  ["agent", "Agent — Sadiya Ibrahim", "/agent"],
+                  ["association", "Association — Kantin Kwari", "/association"],
+                  ["gov", "Gov / MDA view", "/gov"],
                 ] as const
               ).map(([r, label, path]) => (
                 <button
@@ -103,13 +110,8 @@ export function DemoSwitcher() {
               ))}
             </div>
             <div className="mt-3 flex items-center justify-between text-xs">
-              <span>Language</span>
-              <button
-                className="rounded-md border px-2 py-1 font-semibold"
-                onClick={() => setLang(lang === "en" ? "ha" : "en")}
-              >
-                {lang === "en" ? "English → Hausa" : "Hausa → English"}
-              </button>
+              <span>Language / Harshe</span>
+              <LangToggle />
             </div>
           </div>
         </div>
@@ -133,7 +135,8 @@ export function Toasts() {
 }
 
 export function PublicHeader() {
-  const { cart, lang } = useStore();
+  const { cart, session } = useStore();
+  const t = useT();
   const [q, setQ] = useState("");
   const router = useRouter();
   const [menu, setMenu] = useState(false);
@@ -153,7 +156,7 @@ export function PublicHeader() {
               <input
                 value={q}
                 onChange={(e) => setQ(e.target.value)}
-                placeholder={lang === "ha" ? "Me kake nema?" : "Search Kano shops & products"}
+                placeholder={t("searchPh")}
                 className="w-full bg-transparent px-2 py-2.5 text-sm outline-none"
               />
             </div>
@@ -162,15 +165,21 @@ export function PublicHeader() {
             </span>
           </form>
           <nav className="ml-auto hidden items-center gap-3 text-sm font-medium text-slate-700 xl:flex">
-            <Link href="/#services">Services</Link>
-            <Link href="/marketplace">Marketplace</Link>
-            <Link href="/suppliers">Wholesale</Link>
-            <Link href="/login">Sign in</Link>
+            <Link href="/#services">{t("services")}</Link>
+            <Link href="/how-it-works">{t("how")}</Link>
+            <Link href="/marketplace">{t("marketplace")}</Link>
+            <Link href="/markets">{t("markets")}</Link>
+            <Link href="/wholesale">{t("wholesale")}</Link>
+            <LangToggle compact />
+            <Link href={session ? "/settings" : "/login"}>{session ? session.name.split(" ")[0] : t("signIn")}</Link>
             <Button href="/register" size="sm">
-              Create business
+              {t("createBiz")}
             </Button>
           </nav>
           <div className="ml-auto flex items-center gap-1 lg:ml-2">
+            <div className="xl:hidden">
+              <LangToggle compact />
+            </div>
             <Link href="/notifications" className="grid h-11 w-11 place-items-center rounded-xl hover:bg-white/50" aria-label="Notifications">
               <Bell className="h-5 w-5" />
             </Link>
@@ -207,7 +216,7 @@ export function PublicHeader() {
           {[
             ["/#services", "All services"],
             ["/marketplace", "Marketplace"],
-            ["/suppliers", "Wholesale"],
+            ["/wholesale", "Wholesale"],
             ["/customer/orders", "My orders"],
             ["/customer/wallet", "Wallet"],
             ["/login", "Sign in"],
@@ -226,19 +235,30 @@ export function PublicHeader() {
 
 const merchantNav = [
   { href: "/merchant", label: "Dashboard", icon: LayoutDashboard },
+  { href: "/merchant/activity", label: "Live activity", icon: LineChart },
   { href: "/marketplace", label: "Marketplace", icon: Store },
   { href: "/merchant/orders", label: "Orders", icon: ShoppingBag },
+  { href: "/merchant/returns", label: "Returns", icon: Package },
   { href: "/merchant/products", label: "Products", icon: Package },
   { href: "/merchant/inventory", label: "Inventory", icon: Boxes },
   { href: "/merchant/pos", label: "Point of Sale", icon: Receipt },
   { href: "/merchant/sales", label: "Sales", icon: LineChart },
   { href: "/merchant/customers", label: "Customers", icon: Users },
+  { href: "/merchant/reviews", label: "Reviews", icon: BadgeCheck },
+  { href: "/merchant/loyalty", label: "Loyalty", icon: Megaphone },
   { href: "/merchant/suppliers", label: "Suppliers", icon: Building2 },
+  { href: "/merchant/wholesale", label: "Wholesale POs", icon: Boxes },
+  { href: "/wholesale", label: "B2B floor", icon: Store },
   { href: "/merchant/expenses", label: "Expenses", icon: CreditCard },
   { href: "/merchant/accounting", label: "Accounting", icon: Landmark },
+  { href: "/merchant/tax", label: "Tax summary", icon: Receipt },
+  { href: "/merchant/reports", label: "Reports", icon: BarChart3 },
   { href: "/merchant/invoices", label: "Invoices", icon: Receipt },
   { href: "/merchant/payments", label: "Payments", icon: Wallet },
   { href: "/merchant/wallet", label: "Wallet", icon: Wallet },
+  { href: "/merchant/settlement", label: "Settlement calendar", icon: Landmark },
+  { href: "/merchant/credit-pack", label: "Credit pack (banks)", icon: BadgeCheck },
+  { href: "/merchant/disputes", label: "Dispute holds", icon: LifeBuoy },
   { href: "/merchant/banking", label: "Business Banking", icon: Landmark },
   { href: "/merchant/logistics", label: "Logistics", icon: Truck },
   { href: "/merchant/analytics", label: "Analytics", icon: BarChart3 },
@@ -253,20 +273,32 @@ const merchantNav = [
 
 const adminNav = [
   { href: "/admin", label: "Overview", icon: LayoutDashboard },
+  { href: "/admin/activity", label: "Live tape", icon: LineChart },
+  { href: "/admin/health", label: "Platform health", icon: Shield },
   { href: "/admin/merchants", label: "Merchants", icon: Store },
   { href: "/admin/customers", label: "Customers", icon: Users },
   { href: "/admin/orders", label: "Orders", icon: ShoppingBag },
+  { href: "/admin/products", label: "Catalog", icon: Package },
   { href: "/admin/payments", label: "Payments", icon: Wallet },
+  { href: "/admin/payouts", label: "Payouts", icon: CreditCard },
   { href: "/admin/logistics", label: "Logistics", icon: Truck },
+  { href: "/admin/suppliers", label: "Suppliers", icon: Building2 },
   { href: "/admin/partners", label: "Financial Partners", icon: Landmark },
   { href: "/admin/financing", label: "Financing", icon: BadgeCheck },
   { href: "/admin/verification", label: "Verification", icon: Shield },
   { href: "/admin/disputes", label: "Disputes", icon: LifeBuoy },
+  { href: "/admin/tickets", label: "Tickets", icon: LifeBuoy },
   { href: "/admin/risk", label: "Risk / Fraud", icon: Shield },
+  { href: "/admin/audit", label: "Audit", icon: LineChart },
   { href: "/admin/analytics", label: "Analytics", icon: BarChart3 },
   { href: "/admin/kano", label: "Kano Economy", icon: MapPin },
+  { href: "/admin/marketing", label: "Marketing", icon: Megaphone },
+  { href: "/admin/content", label: "Content", icon: Settings },
+  { href: "/admin/flags", label: "Feature flags", icon: Settings },
+  { href: "/admin/staff", label: "Ops staff", icon: UserCog },
+  { href: "/admin/announcements", label: "Announcements", icon: Megaphone },
   { href: "/admin/reports", label: "Reports", icon: LineChart },
-  { href: "/settings", label: "Settings", icon: Settings },
+  { href: "/admin/settings", label: "Platform settings", icon: Settings },
 ];
 
 export function AppShell({
@@ -336,93 +368,18 @@ export function AppShell({
           <Link href="/notifications" className="grid h-11 w-11 place-items-center rounded-xl" aria-label="Notifications">
             <Bell className="h-5 w-5 text-slate-600" />
           </Link>
+          <LangToggle compact />
           <Link href="/merchant/ai" className="hidden text-xs font-semibold text-emerald-700 md:block">
             AI
           </Link>
           <div className="h-9 w-9 rounded-full bg-emerald-700 text-center text-sm font-bold leading-9 text-white">A</div>
         </div>
-        <main className={cn("flex-1 animate-in p-3 sm:p-5 lg:p-6", kind === "merchant" && "pb-24 lg:pb-6")}>{children}</main>
+        <main className="flex-1 animate-in p-3 pb-24 sm:p-5 lg:p-6 lg:pb-6">{children}</main>
       </div>
-      {kind === "merchant" && <MerchantMobileNav />}
-    </div>
-  );
-}
-
-function MerchantMobileNav() {
-  const path = usePathname();
-  const items = [
-    ["/merchant", Home, "Home"],
-    ["/merchant/orders", ShoppingBag, "Orders"],
-    ["/merchant/pos", Plus, "POS"],
-    ["/merchant/products", Package, "Products"],
-    ["/merchant/more", MoreHorizontal, "More"],
-  ] as const;
-  return <PhoneDock items={items} path={path} hideOn="lg" center="/merchant/pos" />;
-}
-
-export function CustomerBottom() {
-  const { cart } = useStore();
-  const path = usePathname();
-  const count = cart.reduce((s, i) => s + i.qty, 0);
-  const items = [
-    ["/marketplace", Home, "Home"],
-    ["/marketplace/search", Search, "Search"],
-    ["/customer/orders", Package, "Orders"],
-    ["/cart", ShoppingBag, "Cart"],
-    ["/customer/profile", Users, "Account"],
-  ] as const;
-  return <PhoneDock items={items} path={path} hideOn="md" badge={count} badgeLabel="Cart" />;
-}
-
-export function PhoneDock({
-  items,
-  path,
-  hideOn = "md",
-  center,
-  badge,
-  badgeLabel,
-}: {
-  items: readonly (readonly [string, typeof Home, string])[];
-  path: string;
-  hideOn?: "md" | "lg";
-  center?: string;
-  badge?: number;
-  badgeLabel?: string;
-}) {
-  return (
-    <div className={cn("pointer-events-none fixed inset-x-0 bottom-0 z-30 p-3", hideOn === "lg" ? "lg:hidden" : "md:hidden")}>
-      <nav className="pointer-events-auto mx-auto flex max-w-md items-end justify-around rounded-[1.85rem] border border-white/70 bg-white/80 px-1.5 py-1.5 shadow-[0_18px_50px_rgba(15,23,42,0.22)] backdrop-blur-2xl">
-        {items.map(([href, Icon, label]) => {
-          const active = path === href || (href !== items[0][0] && path.startsWith(href));
-          const isCenter = center === href;
-          return (
-            <Link
-              key={href}
-              href={href}
-              className={cn(
-                "relative flex min-w-[3.6rem] flex-col items-center gap-0.5 px-1 py-1 text-[10px] font-semibold",
-                active ? "text-emerald-800" : "text-slate-500"
-              )}
-            >
-              <span
-                className={cn(
-                  "grid place-items-center rounded-2xl transition",
-                  isCenter ? "h-12 w-12 -mt-5 bg-emerald-700 text-white shadow-lg shadow-emerald-700/30" : "h-9 w-9",
-                  !isCenter && active && "bg-emerald-700/12"
-                )}
-              >
-                <Icon className={isCenter ? "h-5 w-5" : "h-5 w-5"} />
-              </span>
-              {label}
-              {badgeLabel === label && badge && badge > 0 ? (
-                <span className="absolute right-1 top-0 grid h-4 min-w-4 place-items-center rounded-full bg-emerald-700 px-1 text-[9px] text-white">
-                  {badge}
-                </span>
-              ) : null}
-            </Link>
-          );
-        })}
-      </nav>
+      {kind === "merchant" && <MerchantDock />}
+      {kind === "admin" && <AdminDock />}
+      {kind === "logistics" && <RiderDock />}
+      {kind === "supplier" && <SupplierDock />}
     </div>
   );
 }
@@ -456,21 +413,24 @@ export function Footer() {
           <p className="mt-3 text-sm text-slate-400">{brand.subtitle}</p>
         </div>
         {[
-          ["Company", ["About", "Careers", "Contact"]],
-          ["Marketplace", ["Categories", "Shops", "Deals"]],
-          ["For Businesses", ["Merchant OS", "POS", "Financing"]],
-          ["Legal", ["Privacy", "Terms", "Responsible Financing"]],
-        ].map(([h, links]) => (
-          <div key={h as string}>
-            <p className="font-semibold text-white">{h as string}</p>
+          ["Company", ["/about", "About"], ["/press", "Press"], ["/contact", "Contact"]],
+          ["Product", ["/how-it-works", "How it works"], ["/pricing", "Pricing"], ["/faq", "FAQ"]],
+          ["Audiences", ["/for-merchants", "Merchants"], ["/for-customers", "Customers"], ["/for-riders", "Riders"], ["/for-agents", "Agents"], ["/association", "Associations"], ["/gov", "Government"], ["/for-partners", "Partners"]],
+          ["Legal", ["/trust", "Trust"], ["/legal/privacy", "Privacy"], ["/legal/terms", "Terms"]],
+        ].map((row) => (
+          <div key={row[0] as string}>
+            <p className="font-semibold text-white">{row[0] as string}</p>
             <ul className="mt-2 space-y-1 text-sm">
-              {(links as string[]).map((l) => (
-                <li key={l}>
-                  <Link href="/support" className="hover:text-white">
-                    {l}
-                  </Link>
-                </li>
-              ))}
+              {row.slice(1).map((item) => {
+                const [h, l] = item as [string, string];
+                return (
+                  <li key={h}>
+                    <Link href={h} className="hover:text-white">
+                      {l}
+                    </Link>
+                  </li>
+                );
+              })}
             </ul>
           </div>
         ))}

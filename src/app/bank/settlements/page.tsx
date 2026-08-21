@@ -7,16 +7,18 @@ export default function Page() {
   const { toast } = useStore();
   return (
     <PortalShell kind="bank">
-      <PageHead title="Settlements" />
+      <PageHead title="Settlements" sub="T+1 NIBSS file · 22:00 WAT cut-off" />
       <div className="grid gap-3 sm:grid-cols-3">
         <StatCard label="Pending batch" value="₦42.1M" />
-        <StatCard label="Next window" value="22:00 WAT" />
-        <StatCard label="Failed" value="12" />
+        <StatCard label="Merchants in file" value="1,842" />
+        <StatCard label="Failed last night" value="12" />
       </div>
-      <Card className="mt-4 p-4 text-sm">
-        Tonight’s T+1 batch includes 1,842 merchants. Fees routed to payment partner.
-        <Button className="mt-3" onClick={() => toast("Settlement file generated (prototype)")}>
-          Generate NIBSS file
+      <Card className="mt-4 space-y-2 p-4 text-sm">
+        <p>Tonight’s file includes POS + marketplace + wallet. Fees routed to payment partner.</p>
+        <p className="font-mono text-xs">Hash e7c1… · Notional NIBSS Instant</p>
+        <Button onClick={() => toast("Settlement file generated (prototype)")}>Generate NIBSS file</Button>
+        <Button variant="outline" className="ml-2" onClick={() => toast("Exceptions exported")}>
+          Exception CSV
         </Button>
       </Card>
     </PortalShell>
