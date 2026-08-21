@@ -134,25 +134,151 @@ export function Toasts() {
   );
 }
 
+function isShopPath(path: string) {
+  return (
+    path.startsWith("/marketplace") ||
+    path.startsWith("/product") ||
+    path.startsWith("/shop") ||
+    path.startsWith("/cart") ||
+    path.startsWith("/checkout") ||
+    path.startsWith("/customer")
+  );
+}
+
 export function PublicHeader() {
+  const path = usePathname() || "/";
+  const shop = isShopPath(path);
   const { cart, session } = useStore();
   const t = useT();
   const [q, setQ] = useState("");
   const router = useRouter();
   const [menu, setMenu] = useState(false);
+  const [sol, setSol] = useState(false);
   const goSearch = (e?: FormEvent) => {
     e?.preventDefault();
     router.push("/marketplace/search?q=" + encodeURIComponent(q || "sneakers"));
   };
   const count = cart.reduce((s, i) => s + i.qty, 0);
+  const siteLinks: [string, string][] = [
+    ["/how-it-works", t("how")],
+    ["/markets", t("markets")],
+    ["/marketplace", t("marketplace")],
+    ["/wholesale", t("wholesale")],
+    ["/for-partners", t("partners")],
+    ["/trust", t("trust")],
+  ];
+  const solutions: [string, string, string][] = [
+    ["/for-merchants", t("merchants"), "POS, stock, books, credit-pack"],
+    ["/for-riders", t("riders"), "Jobs, SLA, payouts"],
+    ["/for-agents", t("agent"), "Rumfa KYC + cash-assist"],
+    ["/association", "Associations", "Kwari dues & mill pools"],
+    ["/gov", "Government", "View-only LGA desk"],
+    ["/supplier", "Mills", "Supplier OS"],
+  ];
+  const mobile = shop
+    ? ([
+        ["/marketplace", t("marketplace")],
+        ["/markets", t("markets")],
+        ["/wholesale", t("wholesale")],
+        ["/cart", "Cart"],
+        ["/customer/orders", "My orders"],
+        ["/login", t("signIn")],
+        ["/register", t("createBiz")],
+      ] as const)
+    : ([
+        ["/for-merchants", t("merchants")],
+        ["/for-customers", "Customers"],
+        ["/for-riders", t("riders")],
+        ["/for-agents", t("agent")],
+        ["/markets", t("markets")],
+        ["/marketplace", t("marketplace")],
+        ["/wholesale", t("wholesale")],
+        ["/association", "Associations"],
+        ["/for-partners", t("partners")],
+        ["/gov", "Government"],
+        ["/trust", t("trust")],
+        ["/pricing", t("pricing")],
+        ["/how-it-works", t("how")],
+        ["/login", t("signIn")],
+        ["/register", t("createBiz")],
+      ] as const);
+
   return (
     <header className="glass-nav sticky top-0 z-30">
       <div className="mx-auto max-w-7xl px-3 py-2 sm:px-4 sm:py-3">
         <div className="flex items-center gap-2">
           <Logo />
-          <form className="hidden min-w-0 flex-1 items-center gap-2 lg:flex" onSubmit={goSearch}>
+          {shop ? (
+            <form className="hidden min-w-0 flex-1 items-center gap-2 lg:flex" onSubmit={goSearch}>
+              <div className="flex flex-1 items-center rounded-2xl border border-white/60 bg-white/50 px-3">
+                <Search className="h-4 w-4 shrink-0 text-slate-400" />
+                <input
+                  value={q}
+                  onChange={(e) => setQ(e.target.value)}
+                  placeholder={t("searchPh")}
+                  className="w-full bg-transparent px-2 py-2.5 text-sm outline-none"
+                />
+              </div>
+              <span className="flex items-center gap-1 rounded-xl border border-white/60 bg-white/40 px-3 py-2.5 text-xs font-medium text-slate-600">
+                <MapPin className="h-3 w-3" /> Kano
+              </span>
+            </form>
+          ) : (
+            <nav className="ml-4 hidden items-center gap-1 text-sm font-semibold text-slate-700 lg:flex">
+              <div className="relative" onMouseEnter={() => setSol(true)} onMouseLeave={() => setSol(false)}>
+                <button type="button" className="rounded-lg px-2.5 py-2 hover:bg-white/50">
+                  {t("solutions")}
+                </button>
+                {sol && (
+                  <div className="absolute left-0 top-full z-40 w-72 rounded-2xl border border-white/60 bg-white/95 p-2 shadow-xl backdrop-blur">
+                    {solutions.map(([h, l, d]) => (
+                      <Link key={h} href={h} className="block rounded-xl px-3 py-2 hover:bg-emerald-50">
+                        <p>{l}</p>
+                        <p className="text-[11px] font-normal text-slate-500">{d}</p>
+                      </Link>
+                    ))}
+                  </div>
+                )}
+              </div>
+              {siteLinks.map(([h, l]) => (
+                <Link key={h} href={h} className="rounded-lg px-2.5 py-2 hover:bg-white/50">
+                  {l}
+                </Link>
+              ))}
+            </nav>
+          )}
+          <div className="ml-auto flex items-center gap-1">
+            <LangToggle compact />
+            {shop && (
+              <>
+                <Link href="/notifications" className="grid h-11 w-11 place-items-center rounded-xl hover:bg-white/50" aria-label="Notifications">
+                  <Bell className="h-5 w-5" />
+                </Link>
+                <Link href="/cart" className="relative grid h-11 w-11 place-items-center rounded-xl hover:bg-white/50" aria-label="Cart">
+                  <ShoppingBag className="h-5 w-5" />
+                  {count > 0 && (
+                    <span className="absolute right-1 top-1 grid h-4 min-w-4 place-items-center rounded-full bg-emerald-700 px-1 text-[10px] font-bold text-white">
+                      {count}
+                    </span>
+                  )}
+                </Link>
+              </>
+            )}
+            <Link href={session ? "/settings" : "/login"} className="hidden rounded-lg px-2 py-2 text-sm font-semibold text-slate-700 hover:bg-white/50 sm:inline">
+              {session ? session.name.split(" ")[0] : t("signIn")}
+            </Link>
+            <Button href="/register" size="sm" className="hidden sm:inline-flex">
+              {t("createBiz")}
+            </Button>
+            <button className="grid h-11 w-11 place-items-center rounded-xl lg:hidden" onClick={() => setMenu(!menu)} aria-label="Menu">
+              {menu ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
+            </button>
+          </div>
+        </div>
+        {shop && (
+          <form className="mt-2 flex items-center gap-2 lg:hidden" onSubmit={goSearch}>
             <div className="flex flex-1 items-center rounded-2xl border border-white/60 bg-white/50 px-3">
-              <Search className="h-4 w-4 shrink-0 text-slate-400" />
+              <Search className="h-4 w-4 text-slate-400" />
               <input
                 value={q}
                 onChange={(e) => setQ(e.target.value)}
@@ -160,69 +286,12 @@ export function PublicHeader() {
                 className="w-full bg-transparent px-2 py-2.5 text-sm outline-none"
               />
             </div>
-            <span className="flex items-center gap-1 rounded-xl border border-white/60 bg-white/40 px-3 py-2.5 text-xs font-medium text-slate-600">
-              <MapPin className="h-3 w-3" /> Kano
-            </span>
           </form>
-          <nav className="ml-auto hidden items-center gap-3 text-sm font-medium text-slate-700 xl:flex">
-            <Link href="/#services">{t("services")}</Link>
-            <Link href="/how-it-works">{t("how")}</Link>
-            <Link href="/marketplace">{t("marketplace")}</Link>
-            <Link href="/markets">{t("markets")}</Link>
-            <Link href="/wholesale">{t("wholesale")}</Link>
-            <LangToggle compact />
-            <Link href={session ? "/settings" : "/login"}>{session ? session.name.split(" ")[0] : t("signIn")}</Link>
-            <Button href="/register" size="sm">
-              {t("createBiz")}
-            </Button>
-          </nav>
-          <div className="ml-auto flex items-center gap-1 lg:ml-2">
-            <div className="xl:hidden">
-              <LangToggle compact />
-            </div>
-            <Link href="/notifications" className="grid h-11 w-11 place-items-center rounded-xl hover:bg-white/50" aria-label="Notifications">
-              <Bell className="h-5 w-5" />
-            </Link>
-            <Link href="/cart" className="relative grid h-11 w-11 place-items-center rounded-xl hover:bg-white/50" aria-label="Cart">
-              <ShoppingBag className="h-5 w-5" />
-              {count > 0 && (
-                <span className="absolute right-1 top-1 grid h-4 min-w-4 place-items-center rounded-full bg-emerald-700 px-1 text-[10px] font-bold text-white">
-                  {count}
-                </span>
-              )}
-            </Link>
-            <button className="grid h-11 w-11 place-items-center rounded-xl xl:hidden" onClick={() => setMenu(!menu)} aria-label="Menu">
-              {menu ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
-            </button>
-          </div>
-        </div>
-        <form className="mt-2 flex items-center gap-2 lg:hidden" onSubmit={goSearch}>
-          <div className="flex flex-1 items-center rounded-2xl border border-white/60 bg-white/50 px-3">
-            <Search className="h-4 w-4 text-slate-400" />
-            <input
-              value={q}
-              onChange={(e) => setQ(e.target.value)}
-              placeholder="Search products, shops…"
-              className="w-full bg-transparent px-2 py-2.5 text-sm outline-none"
-            />
-          </div>
-          <span className="hidden items-center gap-1 rounded-xl bg-white/40 px-2 py-2 text-xs sm:flex">
-            <MapPin className="h-3 w-3" /> Kano
-          </span>
-        </form>
+        )}
       </div>
       {menu && (
-        <div className="space-y-1 border-t border-white/40 px-4 py-3 xl:hidden">
-          {[
-            ["/#services", "All services"],
-            ["/marketplace", "Marketplace"],
-            ["/wholesale", "Wholesale"],
-            ["/customer/orders", "My orders"],
-            ["/customer/wallet", "Wallet"],
-            ["/login", "Sign in"],
-            ["/register", "Create business"],
-            ["/merchant", "Merchant OS"],
-          ].map(([h, l]) => (
+        <div className="max-h-[70vh] space-y-0.5 overflow-y-auto border-t border-white/40 px-4 py-3 lg:hidden">
+          {mobile.map(([h, l]) => (
             <Link key={h} href={h} className="block rounded-xl px-3 py-3 text-sm font-medium hover:bg-white/50" onClick={() => setMenu(false)}>
               {l}
             </Link>

@@ -5,11 +5,9 @@ import { brand } from "@/config/brand";
 import { Footer, ProductThumb, PublicHeader } from "@/components/chrome";
 import { Badge, Button, Card } from "@/components/ui";
 import { businesses, naira, platformKpis, products, revenueSeries } from "@/data/mock";
+import { clusters } from "@/data/markets";
 import {
-  Store,
   Boxes,
-  Wallet,
-  BookOpen,
   Truck,
   BarChart3,
   Landmark,
@@ -17,100 +15,80 @@ import {
   Shield,
   ArrowRight,
   ShoppingBag,
-  Receipt,
-  Users,
   Building2,
-  CreditCard,
   BadgeCheck,
-  Megaphone,
-  UserCog,
-  Sparkles,
   MapPin,
-  LifeBuoy,
   LayoutDashboard,
-  Smartphone,
   Bike,
   Factory,
+  Handshake,
+  Scale,
 } from "lucide-react";
 import { Area, AreaChart, ResponsiveContainer } from "recharts";
 import type { LucideIcon } from "lucide-react";
 
-const services: {
-  icon: LucideIcon;
-  title: string;
-  desc: string;
-  href: string;
-  audience: string;
-}[] = [
-  { icon: ShoppingBag, title: "Public Marketplace", desc: "Discover verified Kano shops, products and same-day delivery.", href: "/marketplace", audience: "Customers" },
-  { icon: Store, title: "Digital Shop", desc: "Your branded storefront with products, hours and reviews.", href: "/shop/aisha-fashion-house", audience: "Merchants" },
-  { icon: LayoutDashboard, title: "Merchant Operating System", desc: "One dashboard to run sales, stock, staff and cash.", href: "/merchant", audience: "Merchants" },
-  { icon: Boxes, title: "Inventory", desc: "Stock value, low-stock alerts and movement history.", href: "/merchant/inventory", audience: "Merchants" },
-  { icon: Receipt, title: "Point of Sale", desc: "Counter sales with cash, transfer, card or wallet.", href: "/merchant/pos", audience: "Merchants" },
-  { icon: ShoppingBag, title: "Orders & Fulfilment", desc: "Accept, process, refund and assign riders.", href: "/merchant/orders", audience: "Merchants" },
-  { icon: Users, title: "Customer CRM", desc: "Repeat buyers, VIP tags and money owed.", href: "/merchant/customers", audience: "Merchants" },
-  { icon: Building2, title: "Suppliers & Wholesale", desc: "Mills, bales, MOQ restock and trade-credit requests.", href: "/wholesale", audience: "B2B" },
-  { icon: Factory, title: "Supplier OS", desc: "Mill command: POs, stock, slots, invoices.", href: "/supplier", audience: "Mills" },
-  { icon: MapPin, title: "Market clusters", desc: "Kantin Kwari, Sabon Gari, Dawanau stall maps.", href: "/markets", audience: "Kano" },
-  { icon: Users, title: "Agent + cash assist", desc: "Onboard rumfa, partner cash-in/out, USSD.", href: "/agent", audience: "Agents" },
-  { icon: ShoppingBag, title: "Split cart & holds", desc: "Multi-shop checkout, tracking, dispute hold.", href: "/cart", audience: "Trust" },
-  { icon: Landmark, title: "Settlement & credit pack", desc: "T+1 calendar + 90-day pack for partner RMs.", href: "/merchant/credit-pack", audience: "Banks" },
-  { icon: Building2, title: "Association chapter", desc: "Kwari members, dues, mill pools.", href: "/association", audience: "Clusters" },
-  { icon: MapPin, title: "Gov / MDA desk", desc: "View-only LGA GMV for state and donors.", href: "/gov", audience: "Government" },
-  { icon: CreditCard, title: "Expenses", desc: "Rent, salary, transport — with receipts.", href: "/merchant/expenses", audience: "Merchants" },
-  { icon: BookOpen, title: "Accounting", desc: "P&L, cash flow, tax summary. Export PDF/CSV.", href: "/merchant/accounting", audience: "Merchants" },
-  { icon: Receipt, title: "Invoices", desc: "Create, send and record payments.", href: "/merchant/invoices", audience: "Merchants" },
-  { icon: Wallet, title: "Payments & Wallet", desc: "Collect, settle and withdraw via licensed partners.", href: "/merchant/wallet", audience: "Finance" },
-  { icon: Landmark, title: "Business Banking UI", desc: "Partner-powered transfers, bills and statements.", href: "/merchant/banking", audience: "Finance" },
-  { icon: Truck, title: "Logistics", desc: "Request pickup, track riders, delivery fees.", href: "/merchant/logistics", audience: "Logistics" },
-  { icon: Bike, title: "Rider App", desc: "Accept jobs, navigate, mark delivered, earn.", href: "/logistics", audience: "Riders" },
-  { icon: Factory, title: "Logistics Company", desc: "Fleet, drivers, service areas and pricing.", href: "/logistics/company", audience: "Logistics" },
-  { icon: BarChart3, title: "Analytics & Insights", desc: "Revenue, categories, best days, AI tips.", href: "/merchant/analytics", audience: "Merchants" },
-  { icon: BadgeCheck, title: "Financial Profile", desc: "Credit-readiness score from sales history.", href: "/merchant/financial-profile", audience: "Finance" },
-  { icon: Landmark, title: "Financing Marketplace", desc: "Prototype partner offers — not a loan guarantee.", href: "/merchant/financing", audience: "Finance" },
-  { icon: Megaphone, title: "Marketing & Coupons", desc: "Discounts, flash sales, WhatsApp broadcasts.", href: "/merchant/marketing", audience: "Merchants" },
-  { icon: UserCog, title: "Staff & Roles", desc: "Owner, cashier, inventory, accountant permissions.", href: "/merchant/staff", audience: "Merchants" },
-  { icon: Shield, title: "Verification", desc: "Phone, ID, address and documents.", href: "/merchant/business", audience: "Trust" },
-  { icon: Sparkles, title: "AI Business Assistant", desc: "Ask about sales, stock and profit (prototype).", href: "/merchant/ai", audience: "Merchants" },
-  { icon: Smartphone, title: "Customer Wallet", desc: "Balance, top-up, pay merchants.", href: "/customer/wallet", audience: "Customers" },
-  { icon: MapPin, title: "Kano Economic Dashboard", desc: "LGA activity for government and partners.", href: "/admin/kano", audience: "Government" },
-  { icon: LayoutDashboard, title: "Admin Console", desc: "Merchants, payments, disputes, risk.", href: "/admin", audience: "Ops" },
-  { icon: BarChart3, title: "Executive / Investor", desc: "GMV, jobs, unit economics (illustrative).", href: "/executive", audience: "Investors" },
-  { icon: LifeBuoy, title: "Support", desc: "Help, tickets and live chat UI.", href: "/support", audience: "Everyone" },
+const services: { icon: LucideIcon; title: string; desc: string; href: string; audience: string }[] = [
+  { icon: ShoppingBag, title: "Public Marketplace", desc: "Verified Kano shops, split-cart, same-day metro delivery.", href: "/marketplace", audience: "Customers" },
+  { icon: LayoutDashboard, title: "Merchant OS", desc: "POS, stock, books, staff, settlement calendar, credit-pack.", href: "/merchant", audience: "Merchants" },
+  { icon: Factory, title: "Supplier OS", desc: "Mill POs, bales, slots, trade-credit book.", href: "/supplier", audience: "Mills" },
+  { icon: Boxes, title: "B2B wholesale floor", desc: "MOQ restock from Kwari, Dawanau, Sabon Gari, Sharada.", href: "/wholesale", audience: "B2B" },
+  { icon: MapPin, title: "Market clusters", desc: "Stall maps of Kantin Kwari and five sister floors.", href: "/markets", audience: "Kano" },
+  { icon: Handshake, title: "Agent + cash-assist", desc: "Onboard rumfa, partner cash-in/out, USSD kiosk.", href: "/agent", audience: "Agents" },
+  { icon: Bike, title: "Rider + fleet HQ", desc: "Jobs, SLA, payouts, simulated live map.", href: "/logistics", audience: "Logistics" },
+  { icon: Landmark, title: "Partner bank & loans", desc: "NIP, settlements, pipeline — licensed partners only.", href: "/bank", audience: "Finance" },
+  { icon: Building2, title: "Association chapter", desc: "Kwari members, dues, mill pools, training.", href: "/association", audience: "Clusters" },
+  { icon: Scale, title: "Gov / MDA desk", desc: "View-only LGA GMV for state and donors.", href: "/gov", audience: "Government" },
+  { icon: Shield, title: "SOC + admin", desc: "Fraud, IAM, disputes, platform health.", href: "/security", audience: "Trust" },
+  { icon: BarChart3, title: "Executive pack", desc: "GMV, jobs, unit economics for the board.", href: "/executive", audience: "Investors" },
 ];
 
 export default function Landing() {
   return (
     <div className="min-h-screen">
       <PublicHeader />
+
       <section className="relative overflow-hidden px-4 py-16 md:py-24">
         <div className="pointer-events-none absolute -left-20 top-0 h-72 w-72 rounded-full bg-emerald-400/30 blur-3xl" />
         <div className="pointer-events-none absolute right-0 top-10 h-80 w-80 rounded-full bg-blue-500/25 blur-3xl" />
-        <div className="mx-auto grid max-w-7xl items-center gap-10 md:grid-cols-2">
+        <div className="mx-auto grid max-w-7xl items-center gap-10 lg:grid-cols-2">
           <div>
-            <Badge tone="gold">Kano State · Digital Business OS</Badge>
+            <Badge tone="gold">Kano State · Digital Business Infrastructure</Badge>
             <h1 className="mt-4 text-4xl font-extrabold leading-tight text-emerald-950 md:text-5xl">{brand.tagline}</h1>
-            <p className="mt-4 max-w-xl text-lg text-slate-700">{brand.description}</p>
-            <p className="mt-3 text-sm font-semibold text-emerald-800">Sell · Manage · Collect · Deliver · Understand · Grow · Access financing</p>
+            <p className="mt-4 max-w-xl text-lg text-slate-700">
+              One operating system from <strong>Sharada mill gate</strong> to <strong>Kantin Kwari rumfa</strong> to a Hotoro
+              doorstep. Sell online, run POS and books, restock in bales, collect through licensed partners, and show a
+              bank RM a 90-day credit pack — without pretending KanoHub is a bank.
+            </p>
+            <p className="mt-3 text-sm font-semibold text-emerald-800">
+              Sell · Manage · Collect · Deliver · Understand · Grow · Request financing (partners)
+            </p>
+            <ul className="mt-4 space-y-1.5 text-sm text-slate-700">
+              <li>✓ Built for informal and formal Kano SMEs — Hausa toggle, agent kiosks, USSD prototype.</li>
+              <li>✓ Split-cart across shops with partner hold until delivery or dispute release.</li>
+              <li>✓ Illustrative prototype — financing not guaranteed.</li>
+            </ul>
             <div className="mt-8 flex flex-wrap gap-3">
               <Button href="/register" size="lg">
-                Create Your Business
+                Create your business
               </Button>
               <Button href="/marketplace" size="lg" variant="outline">
-                Explore Marketplace
+                Shop Kano
               </Button>
-              <Button href="/merchant" size="lg" variant="ghost">
-                Open Merchant OS
+              <Button href="/how-it-works" size="lg" variant="ghost">
+                How the OS works
               </Button>
             </div>
           </div>
           <Card className="p-5">
             <div className="mb-3 flex items-center justify-between">
-              <p className="font-semibold">Aisha Fashion House</p>
-              <Badge tone="green">Verified</Badge>
+              <div>
+                <p className="font-semibold">Aisha Fashion House</p>
+                <p className="text-xs text-slate-500">Nassarawa · Kantin Kwari inlet · Verified</p>
+              </div>
+              <Badge tone="green">Credit-readiness 742</Badge>
             </div>
             <p className="text-3xl font-bold">{naira(4280500)}</p>
-            <p className="text-xs text-slate-500">Sales · last 30 days · prototype</p>
+            <p className="text-xs text-slate-500">30-day sales · prototype, not live GMV</p>
             <div className="mt-3 h-28">
               <ResponsiveContainer width="100%" height="100%">
                 <AreaChart data={revenueSeries}>
@@ -124,45 +102,87 @@ export default function Landing() {
                 Orders
               </div>
               <div className="rounded-lg bg-white/50 p-2">
-                <p className="font-bold">173</p>
-                Customers
+                <p className="font-bold">T+1</p>
+                Partner settle
               </div>
               <div className="rounded-lg bg-white/50 p-2">
-                <p className="font-bold">742</p>
-                Credit readiness
+                <p className="font-bold">14d</p>
+                Mill terms*
               </div>
             </div>
+            <p className="mt-3 text-[11px] text-slate-500">*Trade credit is a request to licensed partners — not a KanoHub loan.</p>
           </Card>
         </div>
       </section>
 
       <section className="mx-auto max-w-7xl px-4">
-        <Card className="p-4">
-          <form action="/marketplace/search" className="flex flex-col gap-3 md:flex-row">
-            <input name="q" placeholder="What are you looking for? Fashion, Phones, Food…" className="flex-1 rounded-xl border border-white/60 bg-white/40 px-3 py-3 outline-none" />
-            <select className="rounded-xl border border-white/60 bg-white/40 px-3 py-3" defaultValue="Kano">
-              <option>Kano</option>
-            </select>
-            <Button href="/marketplace/search?q=sneakers" size="lg">
-              Search
-            </Button>
-          </form>
-          <div className="mt-3 flex flex-wrap gap-2">
-            {["Fashion", "Phones", "Food", "Electronics", "Beauty", "Groceries"].map((c) => (
-              <Link key={c} href={`/marketplace/category/${c.toLowerCase()}`} className="rounded-full border border-white/70 bg-white/40 px-3 py-1 text-sm backdrop-blur">
-                {c}
-              </Link>
-            ))}
-          </div>
-        </Card>
+        <p className="text-xs font-semibold uppercase text-amber-800">Illustrative prototype data</p>
+        <div className="mt-3 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+          {[
+            [CheckCircle2, "Verified businesses", platformKpis.merchants.toLocaleString()],
+            [Shield, "Partner-rail GMV (proto)", `₦${platformKpis.gmv}B`],
+            [Truck, "Delivery legs", platformKpis.deliveries.toLocaleString()],
+            [BarChart3, "Jobs supported", platformKpis.jobs.toLocaleString()],
+          ].map(([I, t, v]) => (
+            <Card key={t as string} className="flex items-center gap-3 p-5">
+              <I className="h-6 w-6 text-emerald-700" />
+              <div>
+                <p className="text-xs text-slate-500">{t as string}</p>
+                <p className="font-bold">{v as string}</p>
+              </div>
+            </Card>
+          ))}
+        </div>
+      </section>
+
+      <section className="mx-auto max-w-7xl px-4 py-14">
+        <h2 className="text-3xl font-bold text-emerald-950">Why Kano needs an OS, not another storefront</h2>
+        <p className="mt-3 max-w-3xl text-slate-700">
+          Kantin Kwari still moves fabric in bales. Dawanau still prices rice by the sack. Sabon Gari still cashes notes
+          at the stall. Generic marketplaces ignore mill MOQs, association dues, agent onboarding and the partner bank
+          that actually settles ₦. KanoHub is the infrastructure layer: commerce + ops + logistics + a
+          <em> credit-readiness file</em> a relationship manager can open.
+        </p>
+        <div className="mt-8 grid gap-4 md:grid-cols-3">
+          {[
+            ["The stall", "Aisha runs POS, stock and a mill PO in one tape. Weekend sales hit Friday’s settlement calendar."],
+            ["The mill", "Hassan at Sharada confirms Ankara bales, books a Zoo Road van slot, invoices 14-day partner terms."],
+            ["The corridor", "Maryam pays once for Fashion House + Arewa Beauty. Funds sit on partner hold until each rider marks delivered."],
+          ].map(([h, b]) => (
+            <Card key={h} className="p-5">
+              <p className="font-bold text-emerald-900">{h}</p>
+              <p className="mt-2 text-sm text-slate-600">{b}</p>
+            </Card>
+          ))}
+        </div>
+      </section>
+
+      <section className="mx-auto max-w-7xl px-4 py-6">
+        <h2 className="text-2xl font-bold">Mill → rumfa → doorstep</h2>
+        <div className="mt-6 grid gap-3 md:grid-cols-5">
+          {[
+            ["1. Mill", "Supplier OS · Sharada", "/supplier"],
+            ["2. B2B floor", "Bales, bags, MOQ", "/wholesale"],
+            ["3. Shop OS", "POS + books", "/merchant"],
+            ["4. Split cart", "Hold per shop", "/cart"],
+            ["5. Rider", "Simulated map", "/logistics"],
+          ].map(([n, d, h]) => (
+            <Link key={n} href={h}>
+              <Card className="h-full p-4 hover:-translate-y-0.5">
+                <p className="text-sm font-bold text-emerald-800">{n}</p>
+                <p className="mt-1 text-sm text-slate-600">{d}</p>
+              </Card>
+            </Link>
+          ))}
+        </div>
       </section>
 
       <section id="services" className="mx-auto max-w-7xl px-4 py-14">
         <div className="mb-6 flex flex-wrap items-end justify-between gap-3">
           <div>
-            <p className="text-sm font-semibold uppercase tracking-wider text-emerald-800">All services</p>
-            <h2 className="text-3xl font-bold text-emerald-950">The complete KanoHub ecosystem</h2>
-            <p className="mt-1 text-slate-600">Every module is live in this prototype. Tap a card to open it.</p>
+            <p className="text-sm font-semibold uppercase tracking-wider text-emerald-800">The stack</p>
+            <h2 className="text-3xl font-bold text-emerald-950">Every desk in one prototype</h2>
+            <p className="mt-1 text-slate-600">Investor, bank RM, association and MDA can click through real screens — not slides.</p>
           </div>
           <Badge tone="gold">Illustrative prototype</Badge>
         </div>
@@ -172,9 +192,7 @@ export default function Landing() {
               <Card className="h-full p-5 transition hover:-translate-y-0.5 hover:bg-white/70">
                 <div className="flex items-start justify-between">
                   <s.icon className="h-6 w-6 text-emerald-700" />
-                  <span className="rounded-full bg-emerald-700/10 px-2 py-0.5 text-[10px] font-bold uppercase text-emerald-800">
-                    {s.audience}
-                  </span>
+                  <span className="rounded-full bg-emerald-700/10 px-2 py-0.5 text-[10px] font-bold uppercase text-emerald-800">{s.audience}</span>
                 </div>
                 <p className="mt-3 font-semibold text-slate-900">{s.title}</p>
                 <p className="mt-1 text-sm text-slate-600">{s.desc}</p>
@@ -187,21 +205,79 @@ export default function Landing() {
         </div>
       </section>
 
-      <section className="mx-auto max-w-7xl px-4 pb-10">
-        <h2 className="text-2xl font-bold">How it works</h2>
-        <div className="mt-6 grid gap-4 md:grid-cols-6">
-          {["Create your business", "Add products", "Start selling", "Manage finances", "Deliver orders", "Grow"].map((s, i) => (
-            <Card key={s} className="p-4">
-              <p className="text-emerald-700 font-bold">{i + 1}</p>
-              <p className="mt-2 font-semibold">{s}</p>
-            </Card>
+      <section className="mx-auto max-w-7xl px-4 py-8">
+        <div className="flex items-end justify-between gap-3">
+          <div>
+            <h2 className="text-2xl font-bold">Six market clusters, stall-level</h2>
+            <p className="text-sm text-slate-600">Simulated rumfa maps — not GPS. Open Kantin Kwari, Dawanau, Sabon Gari…</p>
+          </div>
+          <Link href="/markets" className="text-sm font-semibold text-emerald-800">
+            All clusters →
+          </Link>
+        </div>
+        <div className="mt-4 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+          {clusters.slice(0, 6).map((c) => (
+            <Link key={c.id} href={`/markets/${c.slug}`}>
+              <Card className="p-4 hover:-translate-y-0.5">
+                <p className="font-bold">{c.name}</p>
+                <p className="text-xs text-slate-500">
+                  {c.lga} · {c.specialty}
+                </p>
+                <p className="mt-2 text-sm text-slate-600">{c.blurb}</p>
+              </Card>
+            </Link>
           ))}
         </div>
       </section>
 
       <section className="mx-auto max-w-7xl px-4 py-8">
+        <h2 className="text-2xl font-bold">Who it is for</h2>
+        <div className="mt-4 grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+          {[
+            ["/for-merchants", "Merchants", "One OS for Zoo Road fashion houses and Gyadi-Gyadi beauty stores: POS that reduces stock, T+1 partner settlement, mill restock, dispute holds."],
+            ["/for-customers", "Customers", "Shop several rumfa in one pay. Track Abdullahi on a simulated map. Open a hold if the shade is wrong."],
+            ["/for-riders", "Riders & fleets", "Accept jobs, SLA clocks, HQ dispatch, payouts via partners."],
+            ["/for-agents", "Agents", "Sadiya walks Kwari with a phone: photos, OTP, cash-assist on licensed rails, USSD for feature phones."],
+            ["/association", "Associations", "Chapter dues, mill pool deals, training — not a regulator."],
+            ["/for-partners", "Banks, MDA, donors", "Credit-pack 742, NIP desk, view-only LGA GMV. You underwrite. We do not."],
+          ].map(([h, t, b]) => (
+            <Link key={h} href={h}>
+              <Card className="h-full p-5 hover:-translate-y-0.5">
+                <p className="font-bold">{t}</p>
+                <p className="mt-2 text-sm text-slate-600">{b}</p>
+                <p className="mt-3 text-xs font-semibold text-emerald-800">Learn more →</p>
+              </Card>
+            </Link>
+          ))}
+        </div>
+      </section>
+
+      <section className="mx-auto max-w-7xl px-4 py-10">
+        <Card className="glass-dark p-8 text-white md:p-12">
+          <h2 className="text-3xl font-bold">What a partner bank actually needs to see</h2>
+          <p className="mt-4 max-w-3xl text-emerald-50">
+            Not a pitch deck. A 90-day pack: GMV, returns, dispute rate, on-time payouts, mill POs, women-owned flag,
+            LGA. Aisha’s illustrative score is <strong>742</strong>. Eligible shops may receive offers from participating
+            licensed financial partners. <strong>Financing is not guaranteed.</strong> KanoHub is not a lender, deposit-taker
+            or payment institution.
+          </p>
+          <div className="mt-6 flex flex-wrap gap-3">
+            <Button href="/merchant/credit-pack" className="bg-white text-emerald-900 hover:bg-emerald-50">
+              Open credit pack
+            </Button>
+            <Button href="/merchant/settlement" variant="outline" className="border-white/40 text-white">
+              Settlement calendar
+            </Button>
+            <Button href="/bank" variant="outline" className="border-white/40 text-white">
+              Bank desk
+            </Button>
+          </div>
+        </Card>
+      </section>
+
+      <section className="mx-auto max-w-7xl px-4 py-8">
         <div className="flex items-center justify-between">
-          <h2 className="text-2xl font-bold">Featured businesses</h2>
+          <h2 className="text-2xl font-bold">Shops on the floor</h2>
           <Link href="/marketplace" className="text-sm font-semibold text-emerald-700">
             Marketplace
           </Link>
@@ -226,7 +302,7 @@ export default function Landing() {
 
       <section className="mx-auto max-w-7xl px-4 py-8">
         <div className="flex items-center justify-between">
-          <h2 className="text-2xl font-bold">Marketplace preview</h2>
+          <h2 className="text-2xl font-bold">Goods moving this week</h2>
           <Link href="/marketplace" className="text-sm font-semibold text-emerald-700">
             See all <ArrowRight className="inline h-4 w-4" />
           </Link>
@@ -247,86 +323,34 @@ export default function Landing() {
         </div>
       </section>
 
-      <section className="mx-auto max-w-7xl px-4 py-10">
-        <Card className="glass-dark p-8 text-white md:p-12">
-          <h2 className="text-3xl font-bold">Build a stronger financial profile as your business grows</h2>
-          <p className="mt-4 max-w-3xl text-emerald-50">
-            Verified sales + payment history + business records + cash-flow history can help participating financial
-            partners assess financing eligibility. Eligible businesses may receive financing offers from participating
-            financial partners. Financing is not guaranteed. Payment and banking screens are powered by licensed partners
-            — KanoHub is not a bank or lender.
-          </p>
-          <div className="mt-6 flex flex-wrap gap-3">
-            <Button href="/merchant/financial-profile" className="bg-white text-emerald-900 hover:bg-emerald-50">
-              Financial profile
-            </Button>
-            <Button href="/merchant/financing" variant="outline" className="border-white/40 text-white">
-              Financing marketplace
-            </Button>
-          </div>
-        </Card>
-      </section>
-
       <section className="mx-auto max-w-7xl px-4 py-8">
-        <h2 className="text-2xl font-bold">Logistics you can see</h2>
-        <div className="mt-6 flex flex-wrap gap-2">
-          {["Order placed", "Rider assigned", "Pickup", "In transit", "Delivered"].map((s, i) => (
-            <div key={s} className="flex items-center gap-2">
-              <div className="glass rounded-full px-4 py-2 text-sm font-semibold text-emerald-900">{s}</div>
-              {i < 4 && <ArrowRight className="h-4 w-4 text-slate-400" />}
-            </div>
-          ))}
-        </div>
-      </section>
-
-      <section className="mx-auto max-w-7xl px-4 py-10">
-        <p className="text-xs font-semibold uppercase text-amber-800">Illustrative prototype data</p>
-        <div className="mt-3 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+        <h2 className="text-2xl font-bold">Trust, in writing</h2>
+        <div className="mt-4 grid gap-4 md:grid-cols-3">
           {[
-            [CheckCircle2, "Verified businesses", platformKpis.merchants.toLocaleString()],
-            [Shield, "Secure payments", `₦${platformKpis.gmv}B GMV`],
-            [Truck, "Trusted logistics", platformKpis.deliveries.toLocaleString() + " trips"],
-            [BarChart3, "Jobs supported", platformKpis.jobs.toLocaleString()],
-          ].map(([I, t, v]) => (
-            <Card key={t as string} className="flex items-center gap-3 p-5">
-              <I className="h-6 w-6 text-emerald-700" />
-              <div>
-                <p className="text-xs text-slate-500">{t as string}</p>
-                <p className="font-bold">{v as string}</p>
-              </div>
+            [Shield, "Partner rails", "Wallets, NIP, cash-assist and T+1 payouts are labelled as participating licensed financial partners."],
+            [Scale, "No licence theatre", "We do not claim to be a bank, MFB, PSP or insurer. Credit-readiness is indicative."],
+            [BadgeCheck, "Dispute hold", "Split-cart funds stay on hold until delivery or a buyer–merchant–rider case is released."],
+          ].map(([I, h, b]) => (
+            <Card key={h as string} className="p-5">
+              <I className="h-5 w-5 text-emerald-800" />
+              <p className="mt-2 font-bold">{h as string}</p>
+              <p className="mt-1 text-sm text-slate-600">{b as string}</p>
             </Card>
           ))}
         </div>
-      </section>
-
-      <section className="mx-auto max-w-7xl px-4 py-8">
-        <h2 className="text-2xl font-bold">Built for every side of the stall</h2>
-        <div className="mt-4 grid gap-4 md:grid-cols-2 lg:grid-cols-4">
-          {[
-            ["/for-merchants", "Merchants", "POS, stock, books, riders, credit-readiness."],
-            ["/for-customers", "Customers", "Marketplace, wallet, live tracking, VIP points."],
-            ["/for-riders", "Riders & fleets", "Jobs, map, SLA, payouts, incidents."],
-            ["/for-agents", "Agents", "Kwari rumfa, cash-assist, USSD, Hausa."],
-            ["/for-partners", "Banks & government", "NIP desk, loan point, LGA GMV, SOC."],
-          ].map(([h, t, b]) => (
-            <Link key={h} href={h}>
-              <Card className="h-full p-5 hover:-translate-y-0.5">
-                <p className="font-bold">{t}</p>
-                <p className="mt-1 text-sm text-slate-600">{b}</p>
-                <p className="mt-3 text-xs font-semibold text-emerald-800">Learn more →</p>
-              </Card>
-            </Link>
-          ))}
-        </div>
+        <Button href="/trust" variant="outline" className="mt-4" size="sm">
+          Trust & safety
+        </Button>
       </section>
 
       <section className="mx-auto max-w-7xl px-4 py-8">
         <h2 className="text-2xl font-bold">What operators said (illustrative)</h2>
-        <div className="mt-4 grid gap-4 md:grid-cols-3">
+        <div className="mt-4 grid gap-4 md:grid-cols-2 lg:grid-cols-4">
           {[
-            ["Aisha Abdullahi", "Fashion · Nassarawa", "POS and online stock finally match. Weekend sales show on Friday’s tape."],
-            ["Maryam Yusuf", "Customer · Tarauni", "Paid from wallet, watched Abdullahi on the map to Hotoro."],
-            ["Halima Usman", "Ops", "KYC queue, payout holds and SOC ATO in one console."],
+            ["Aisha Abdullahi", "Fashion · Nassarawa", "POS and online stock finally match. Friday’s tape is Saturday’s mill PO."],
+            ["Maryam Yusuf", "Customer · Tarauni", "One pay for two shops. Watched Abdullahi on the map to Hotoro."],
+            ["Sadiya Ibrahim", "Agent · Kwari", "I photograph Stall 214, cash-in ₦85k on the partner rail, list Ankara before zuhur."],
+            ["Alhaji Musa Kwari", "Association", "Dues and a 200-bale mill pool in one chapter desk — not another WhatsApp group."],
           ].map(([n, r, q]) => (
             <Card key={n} className="p-5">
               <p className="text-sm text-slate-700">“{q}”</p>
@@ -337,24 +361,25 @@ export default function Landing() {
         </div>
       </section>
 
-      <section className="mx-auto max-w-7xl px-4 py-8">
-        <h2 className="text-2xl font-bold">System detail</h2>
-        <div className="mt-4 flex flex-wrap gap-2">
-          {[
-            ["/about", "About"],
-            ["/how-it-works", "How it works"],
-            ["/pricing", "Pricing"],
-            ["/trust", "Trust & safety"],
-            ["/faq", "FAQ"],
-            ["/contact", "Contact"],
-            ["/press", "Press"],
-            ["/legal/privacy", "Privacy"],
-          ].map(([h, l]) => (
-            <Button key={h} href={h} variant="outline" size="sm">
-              {l}
+      <section className="mx-auto max-w-7xl px-4 py-10">
+        <Card className="p-8 text-center">
+          <h2 className="text-2xl font-extrabold text-emerald-950">Walk the prototype</h2>
+          <p className="mx-auto mt-2 max-w-2xl text-sm text-slate-600">
+            Password for every desk: <span className="font-mono font-bold">kano123</span>. Demo Mode (bottom-right) switches
+            merchant, mill, agent, association, bank, SOC, board and MDA view.
+          </p>
+          <div className="mt-6 flex flex-wrap justify-center gap-3">
+            <Button href="/login" size="lg">
+              Sign in to a desk
             </Button>
-          ))}
-        </div>
+            <Button href="/register" size="lg" variant="outline">
+              Create a business
+            </Button>
+            <Button href="/contact" size="lg" variant="ghost">
+              Talk to us
+            </Button>
+          </div>
+        </Card>
       </section>
       <Footer />
     </div>

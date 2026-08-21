@@ -57,6 +57,12 @@ export const dict = {
     cashAssist: "Taimakon kuɗi",
     partnerNote:
       "Shigar da fitar da kuɗi na hannu ta hanyar abokan hulɗa masu lasisi. KanoHub ba banki ba ne.",
+    solutions: "Hanyoyi",
+    partners: "Abokan hulɗa",
+    trust: "Aminci",
+    merchants: "’Yan kasuwa",
+    riders: "Masu jigilar kaya",
+    pricing: "Farashi",
   },
 } as const;
 
