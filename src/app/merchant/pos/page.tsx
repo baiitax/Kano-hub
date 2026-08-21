@@ -1,6 +1,6 @@
 "use client";
 
-import { AppShell } from "@/components/chrome";
+import { AppShell, ProductThumb } from "@/components/chrome";
 import { Button, Card } from "@/components/ui";
 import { naira } from "@/data/mock";
 import { useStore } from "@/lib/store";
@@ -44,10 +44,13 @@ export default function POS() {
       <div className="mt-4 grid gap-4 lg:grid-cols-3">
         <div className="grid grid-cols-2 gap-2 pb-40 sm:grid-cols-3 lg:col-span-2 lg:pb-0">
           {products.map((p) => (
-            <button key={p.id} onClick={() => add(p)} className="glass min-h-[5.5rem] rounded-2xl p-3 text-left text-sm active:scale-[0.99]">
-              <p className="line-clamp-2 font-semibold">{p.name}</p>
-              <p className="mt-1 font-bold tabular-nums">{naira(p.price)}</p>
-              <p className="text-xs text-slate-500">Stock {p.stock}</p>
+            <button key={p.id} onClick={() => add(p)} className="glass overflow-hidden rounded-2xl text-left text-sm active:scale-[0.99]">
+              <ProductThumb kind={p.image} alt={p.name} className="h-24 w-full rounded-none" />
+              <div className="p-2">
+                <p className="line-clamp-2 font-semibold">{p.name}</p>
+                <p className="mt-1 font-bold tabular-nums">{naira(p.price)}</p>
+                <p className="text-xs text-slate-500">Stock {p.stock}</p>
+              </div>
             </button>
           ))}
         </div>

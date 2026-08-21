@@ -11,7 +11,7 @@ export function ProductCard({ p, compact }: { p: Product; compact?: boolean }) {
   return (
     <Link href={`/product/${p.id}`} className="block h-full">
       <Card className="h-full overflow-hidden transition hover:-translate-y-0.5">
-        <ProductThumb kind={p.image} className={cn("rounded-none", compact ? "h-28" : "h-36 sm:h-40")} />
+        <ProductThumb kind={p.image} alt={p.name} className={cn("rounded-none bg-white", compact ? "h-28" : "h-36 sm:h-44")} />
         <div className="p-3">
           <p className="truncate text-[11px] font-medium text-emerald-800">{p.merchantName}</p>
           <p className="mt-0.5 line-clamp-2 min-h-[2.5rem] text-sm font-semibold leading-snug">{p.name}</p>
@@ -72,6 +72,6 @@ export function ShopChip({
 
 export function StickyBuyBar({ children }: { children: React.ReactNode }) {
   return (
-    <div className="glass-nav fixed inset-x-0 bottom-14 z-20 px-4 py-3 md:hidden">{children}</div>
+    <div className="glass-nav fixed inset-x-3 bottom-[5.5rem] z-20 rounded-2xl px-3 py-3 shadow-lg md:hidden">{children}</div>
   );
 }

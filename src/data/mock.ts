@@ -341,7 +341,7 @@ export const products: Product[] = [
     stock: 22,
     reorderLevel: 8,
     sku: "KFF-RIC-50",
-    image: "noodles",
+    image: "rice",
     merchantId: "b3",
     merchantName: "Kano Fresh Foods",
     merchantSlug: "kano-fresh-foods",
@@ -791,3 +791,41 @@ export const formatNaira = (n: number) =>
 
 export const naira = (n: number) =>
   (n < 0 ? "−" : "") + "₦" + Math.abs(n).toLocaleString("en-NG");
+
+export function productPhotos(kind: string): string[] {
+  const map: Record<string, [string, string]> = {
+    kaftan: ["/products/kaftan-1.jpg", "/products/kaftan-2.jpg"],
+    sneakers: ["/products/sneakers-1.jpg", "/products/sneakers-2.jpg"],
+    abaya: ["/products/abaya-1.jpg", "/products/abaya-2.jpg"],
+    noodles: ["/products/noodles-1.jpg", "/products/noodles-2.jpg"],
+    phone: ["/products/phone-1.png", "/products/phone-2.jpg"],
+    inverter: ["/products/inverter-1.jpg", "/products/inverter-2.jpg"],
+    beauty: ["/products/beauty-1.jpg", "/products/beauty-2.jpg"],
+    ankara: ["/products/ankara-1.jpg", "/products/ankara-2.jpg"],
+    rice: ["/products/rice-1.webp", "/products/rice-2.webp"],
+    charger: ["/products/charger-2.jpg", "/products/charger-1.jpg"],
+    hijab: ["/products/hijab-1.jpg", "/products/hijab-2.jpg"],
+    generator: ["/products/generator-1.jpg", "/products/generator-2.jpg"],
+  };
+  return map[kind] || ["/products/kaftan-1.jpg", "/products/kaftan-2.jpg"];
+}
+
+export const productReviews: Record<
+  string,
+  { name: string; rating: number; date: string; title: string; body: string; verified: boolean }[]
+> = {
+  p1: [
+    { name: "Sani Garba", rating: 5, date: "18 Aug 2026", title: "Eid-ready", body: "Embroidery is clean. Tailoring from Nassarawa is proper — wore it to Friday prayer.", verified: true },
+    { name: "Umar Faruk", rating: 5, date: "12 Aug 2026", title: "True to size", body: "Ordered XL. Fabric does not cling in the heat. Delivery same afternoon.", verified: true },
+    { name: "Hauwa Bello", rating: 4, date: "02 Aug 2026", title: "Gift for my brother", body: "Colour is richer than the photo. Would buy again for Sallah.", verified: true },
+  ],
+  p2: [
+    { name: "Maryam Yusuf", rating: 5, date: "20 Aug 2026", title: "Comfortable for market days", body: "Walked Sabon Gari all afternoon. No blister. White stays clean if you wipe them.", verified: true },
+    { name: "Sani Garba", rating: 4, date: "09 Aug 2026", title: "Good value", body: "Runs true to size. Sole is firm. Rider was on time.", verified: true },
+  ],
+  default: [
+    { name: "Fatima Sani", rating: 5, date: "15 Aug 2026", title: "As described", body: "Packed well, arrived in Hotoro within the hour. Verified purchase.", verified: true },
+    { name: "Ibrahim Sultan", rating: 4, date: "08 Aug 2026", title: "Will order again", body: "Fair price for Kano. Merchant replied on chat quickly.", verified: true },
+    { name: "Zainab Lawal", rating: 5, date: "01 Aug 2026", title: "Quality", body: "Looks like the listing. Would recommend this shop.", verified: true },
+  ],
+};

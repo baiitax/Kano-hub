@@ -26,7 +26,12 @@ export default function Products() {
           <tbody>
             {products.map((p) => (
               <tr key={p.id} className="border-t">
-                <td className="p-3 font-medium">{p.name}</td>
+                <td className="p-3">
+                  <div className="flex items-center gap-3">
+                    <ProductThumb kind={p.image} alt={p.name} className="h-12 w-12" />
+                    <span className="font-medium">{p.name}</span>
+                  </div>
+                </td>
                 <td>{p.sku}</td>
                 <td>{naira(p.price)}</td>
                 <td>{naira(p.cost)}</td>

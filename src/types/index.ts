@@ -26,6 +26,7 @@ export interface Product {
   reorderLevel: number;
   sku: string;
   image: string;
+  photos?: string[];
   merchantId: string;
   merchantName: string;
   merchantSlug: string;

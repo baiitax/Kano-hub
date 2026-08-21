@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { brand } from "@/config/brand";
+import { productPhotos } from "@/data/mock";
 import { useStore } from "@/lib/store";
 import { Button, cn } from "./ui";
 import {
@@ -64,7 +65,7 @@ export function DemoSwitcher() {
     <>
       <button
         onClick={() => setOpen(true)}
-        className="glass-dark fixed bottom-20 right-4 z-40 rounded-full px-4 py-2.5 text-xs font-bold text-white md:bottom-6"
+        className="glass-dark fixed bottom-24 right-4 z-40 rounded-full px-4 py-2.5 text-xs font-bold text-white shadow-lg md:bottom-6"
       >
         Demo Mode
       </button>
@@ -84,10 +85,13 @@ export function DemoSwitcher() {
                   ["supplier", "Supplier — Kano Textile Mills", "/supplier"],
                   ["admin", "Platform Admin", "/admin"],
                   ["executive", "Executive / Investor", "/executive"],
+                  ["admin", "Bank desk", "/bank"],
+                  ["admin", "Loan point", "/loans"],
+                  ["admin", "Security SOC", "/security"],
                 ] as const
               ).map(([r, label, path]) => (
                 <button
-                  key={r}
+                  key={path}
                   onClick={() => go(r, path)}
                   className={cn(
                     "rounded-lg border px-3 py-2 text-left text-sm",
@@ -353,25 +357,7 @@ function MerchantMobileNav() {
     ["/merchant/products", Package, "Products"],
     ["/merchant/more", MoreHorizontal, "More"],
   ] as const;
-  return (
-    <nav className="glass-nav safe-bottom fixed bottom-0 left-0 right-0 z-30 grid grid-cols-5 px-1 pb-[max(0.4rem,env(safe-area-inset-bottom))] pt-1 lg:hidden">
-      {items.map(([href, Icon, label]) => {
-        const active = path === href || (href !== "/merchant" && path.startsWith(href));
-        return (
-          <Link
-            key={href}
-            href={href}
-            className={cn("flex min-h-12 flex-col items-center justify-center gap-0.5 text-[10px] font-medium", active ? "text-emerald-800" : "text-slate-500")}
-          >
-            <span className={cn("grid h-9 w-9 place-items-center rounded-2xl", href === "/merchant/pos" && "bg-emerald-700 text-white", active && href !== "/merchant/pos" && "bg-emerald-700/10")}>
-              <Icon className="h-5 w-5" />
-            </span>
-            {label}
-          </Link>
-        );
-      })}
-    </nav>
-  );
+  return <PhoneDock items={items} path={path} hideOn="lg" center="/merchant/pos" />;
 }
 
 export function CustomerBottom() {
@@ -385,39 +371,79 @@ export function CustomerBottom() {
     ["/cart", ShoppingBag, "Cart"],
     ["/customer/profile", Users, "Account"],
   ] as const;
+  return <PhoneDock items={items} path={path} hideOn="md" badge={count} badgeLabel="Cart" />;
+}
+
+export function PhoneDock({
+  items,
+  path,
+  hideOn = "md",
+  center,
+  badge,
+  badgeLabel,
+}: {
+  items: readonly (readonly [string, typeof Home, string])[];
+  path: string;
+  hideOn?: "md" | "lg";
+  center?: string;
+  badge?: number;
+  badgeLabel?: string;
+}) {
   return (
-    <nav className="glass-nav fixed bottom-0 left-0 right-0 z-30 grid grid-cols-5 pb-[max(0.4rem,env(safe-area-inset-bottom))] pt-1 md:hidden">
-      {items.map(([href, Icon, label]) => {
-        const active = path === href || (href !== "/marketplace" && path.startsWith(href));
-        return (
-          <Link key={href} href={href} className={cn("relative flex min-h-12 flex-col items-center justify-center gap-0.5 text-[10px] font-medium", active ? "text-emerald-800" : "text-slate-500")}>
-            <Icon className="h-5 w-5" />
-            {label}
-            {label === "Cart" && count > 0 && (
-              <span className="absolute right-[18%] top-0 grid h-4 min-w-4 place-items-center rounded-full bg-emerald-700 px-1 text-[9px] text-white">
-                {count}
+    <div className={cn("pointer-events-none fixed inset-x-0 bottom-0 z-30 p-3", hideOn === "lg" ? "lg:hidden" : "md:hidden")}>
+      <nav className="pointer-events-auto mx-auto flex max-w-md items-end justify-around rounded-[1.85rem] border border-white/70 bg-white/80 px-1.5 py-1.5 shadow-[0_18px_50px_rgba(15,23,42,0.22)] backdrop-blur-2xl">
+        {items.map(([href, Icon, label]) => {
+          const active = path === href || (href !== items[0][0] && path.startsWith(href));
+          const isCenter = center === href;
+          return (
+            <Link
+              key={href}
+              href={href}
+              className={cn(
+                "relative flex min-w-[3.6rem] flex-col items-center gap-0.5 px-1 py-1 text-[10px] font-semibold",
+                active ? "text-emerald-800" : "text-slate-500"
+              )}
+            >
+              <span
+                className={cn(
+                  "grid place-items-center rounded-2xl transition",
+                  isCenter ? "h-12 w-12 -mt-5 bg-emerald-700 text-white shadow-lg shadow-emerald-700/30" : "h-9 w-9",
+                  !isCenter && active && "bg-emerald-700/12"
+                )}
+              >
+                <Icon className={isCenter ? "h-5 w-5" : "h-5 w-5"} />
               </span>
-            )}
-          </Link>
-        );
-      })}
-    </nav>
+              {label}
+              {badgeLabel === label && badge && badge > 0 ? (
+                <span className="absolute right-1 top-0 grid h-4 min-w-4 place-items-center rounded-full bg-emerald-700 px-1 text-[9px] text-white">
+                  {badge}
+                </span>
+              ) : null}
+            </Link>
+          );
+        })}
+      </nav>
+    </div>
   );
 }
 
-export function ProductThumb({ kind, className }: { kind: string; className?: string }) {
-  const bg: Record<string, string> = {
-    kaftan: "from-emerald-700 to-emerald-900",
-    sneakers: "from-slate-200 to-slate-400",
-    abaya: "from-indigo-800 to-slate-900",
-    noodles: "from-red-500 to-orange-600",
-    phone: "from-blue-600 to-slate-800",
-    inverter: "from-amber-500 to-yellow-700",
-    beauty: "from-rose-300 to-amber-200",
-    ankara: "from-yellow-500 to-red-600",
-  };
+export function ProductThumb({
+  kind,
+  className,
+  src,
+  alt = "",
+}: {
+  kind: string;
+  className?: string;
+  src?: string;
+  alt?: string;
+}) {
+  const url = src || productPhotos(kind)[0];
   return (
-    <div className={cn("rounded-xl bg-gradient-to-br", bg[kind] || "from-emerald-600 to-blue-800", className)} />
+    <div className={cn("relative overflow-hidden rounded-xl bg-white", className)}>
+      {/* eslint-disable-next-line @next/next/no-img-element */}
+      <img src={url} alt={alt} className="h-full w-full object-cover" />
+    </div>
   );
 }
 

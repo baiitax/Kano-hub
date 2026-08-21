@@ -1,6 +1,6 @@
 "use client";
 
-import { CustomerBottom, PublicHeader } from "@/components/chrome";
+import { CustomerBottom, ProductThumb, PublicHeader } from "@/components/chrome";
 import { Button, Card, EmptyState } from "@/components/ui";
 import { naira } from "@/data/mock";
 import { useStore } from "@/lib/store";
@@ -22,8 +22,9 @@ export default function Cart() {
           <>
             <div className="mt-4 space-y-3">
               {cart.map((i) => (
-                <Card key={i.product.id} className="flex items-center justify-between gap-3 p-4">
-                  <div className="min-w-0">
+                <Card key={i.product.id} className="flex items-center justify-between gap-3 p-3">
+                  <ProductThumb kind={i.product.image} alt={i.product.name} className="h-16 w-16 shrink-0" />
+                  <div className="min-w-0 flex-1">
                     <p className="truncate font-semibold">{i.product.name}</p>
                     <p className="text-sm text-slate-500">{naira(i.product.price)}</p>
                   </div>
