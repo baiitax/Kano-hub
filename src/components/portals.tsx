@@ -18,7 +18,6 @@ import {
   Smartphone,
   ScrollText,
   Siren,
-  Settings,
   Menu,
   X,
   Building2,

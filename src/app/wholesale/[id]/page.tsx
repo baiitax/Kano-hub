@@ -1,6 +1,6 @@
 "use client";
 import { Footer, ProductThumb, PublicHeader } from "@/components/chrome";
-import { Badge, Button, Card, ProtoNote } from "@/components/ui";
+import { Badge, Button, ProtoNote } from "@/components/ui";
 import { naira } from "@/data/mock";
 import { millSkus } from "@/data/supplier";
 import { useStore } from "@/lib/store";

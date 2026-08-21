@@ -6,7 +6,7 @@ import { naira, orders, products, revenueSeries } from "@/data/mock";
 import { CartesianGrid, Legend, Line, LineChart, ResponsiveContainer, Tooltip, XAxis, YAxis } from "recharts";
 import { useState } from "react";
 import Link from "next/link";
-import { Plus, Receipt, Truck, Wallet } from "lucide-react";
+import { Activity, Plus, Receipt, Truck, Wallet } from "lucide-react";
 import { shopTape } from "@/data/merchant-ops";
 
 export default function MerchantHome() {
@@ -137,12 +137,17 @@ export default function MerchantHome() {
               ))}
           </Card>
           <Card className="p-4 text-sm">
-            <p className="font-semibold">Insights</p>
-            <ul className="mt-2 list-disc space-y-1 pl-4 text-slate-600">
-              <li>Sales increased 18% this month.</li>
-              <li>Fashion is your top category.</li>
-              <li>Weekend sales +32% vs weekdays.</li>
-            </ul>
+            <p className="flex items-center gap-2 font-semibold">
+              <Activity className="h-4 w-4 text-emerald-800" /> Live tape
+            </p>
+            {shopTape.slice(0, 5).map((a) => (
+              <p key={a.t + a.text} className="mt-2 text-xs">
+                <span className="font-mono text-emerald-800">{a.t}</span> {a.text}
+              </p>
+            ))}
+            <Button href="/merchant/activity" size="sm" variant="ghost" className="mt-2">
+              Full tape
+            </Button>
           </Card>
         </div>
       </div>
