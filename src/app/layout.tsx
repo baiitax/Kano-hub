@@ -6,6 +6,11 @@ import { brand } from "@/config/brand";
 export const metadata: Metadata = {
   title: `${brand.name} — ${brand.subtitle}`,
   description: brand.description,
+  icons: {
+    icon: [{ url: "/kanohub-icon.png", type: "image/png" }, { url: "/favicon-32.png", sizes: "32x32", type: "image/png" }],
+    apple: "/icon-192.png",
+    shortcut: "/kanohub-mark.svg",
+  },
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {

@@ -76,3 +76,67 @@ body {
 .animate-in {
   animation: fade-in 0.35s ease-out;
 }
+
+@keyframes kh-mark-in {
+  0% {
+    opacity: 0;
+    transform: scale(0.6) rotate(-8deg);
+  }
+  55% {
+    opacity: 1;
+    transform: scale(1.08) rotate(2deg);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1) rotate(0);
+  }
+}
+@keyframes kh-name-in {
+  from {
+    opacity: 0;
+    letter-spacing: 0.4em;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    letter-spacing: 0.02em;
+    transform: none;
+  }
+}
+@keyframes kh-sub-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+@keyframes kh-bar {
+  0% {
+    width: 0%;
+  }
+  100% {
+    width: 100%;
+  }
+}
+@keyframes kh-glow {
+  0%,
+  100% {
+    filter: drop-shadow(0 0 8px rgba(251, 191, 36, 0.35));
+  }
+  50% {
+    filter: drop-shadow(0 0 22px rgba(16, 185, 129, 0.7));
+  }
+}
+.kh-preloader-mark {
+  animation: kh-mark-in 0.7s cubic-bezier(0.22, 1, 0.36, 1) both, kh-glow 1.6s ease-in-out 0.5s infinite;
+}
+.kh-preloader-name {
+  animation: kh-name-in 0.7s ease-out 0.25s both;
+}
+.kh-preloader-sub {
+  animation: kh-sub-in 0.5s ease-out 0.55s both;
+}
+.kh-preloader-bar {
+  animation: kh-bar 1.5s ease-in-out 0.2s both;
+}

@@ -40,12 +40,12 @@ import { LangToggle } from "./lang-toggle";
 import { useT } from "@/lib/i18n";
 export { CustomerDock as CustomerBottom } from "./docks";
 
+import { BrandMark } from "./brand-mark";
+
 export function Logo({ light }: { light?: boolean }) {
   return (
     <Link href="/" className="flex items-center gap-2">
-      <span className="grid h-9 w-9 place-items-center rounded-xl bg-emerald-700 text-sm font-extrabold text-white">
-        {brand.shortName}
-      </span>
+      <BrandMark className="h-9 w-9 shrink-0 shadow-sm" />
       <span className={cn("text-lg font-extrabold tracking-tight", light ? "text-white" : "text-slate-900")}>
         {brand.name}
       </span>
